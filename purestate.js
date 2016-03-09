@@ -34,6 +34,17 @@ var PureState = (function(){
         return compute;
     };
     node.compute = wrap_function(compute);
+    
+    // The .getter property has the same interface as a stateful variable but
+    // throws if you try to write it. This is useful if you're paranoid and/or
+    // working on a large application where you want some assurance about the
+    // direction of dataflow.
+    node.getter = function () {
+      if (arguments.length > 0) {
+        throw new Error('Attempted to write read-only variable');
+      }
+      return node();
+    };
 
     // The state object can be called with or without an argument. If it is
     // called without an argument, it just returns its value. If it is caleld
